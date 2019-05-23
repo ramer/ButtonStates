@@ -33,12 +33,12 @@ protected:
   bool running = false;
   ulong update_time;
 
-  byte  pin;
-  bool  pin_inverted = false;
+  byte         pin;
+  bool         pin_inverted = false;
   ButtonState  pin_laststate = RELEASED;
-  float pin_average;
-  ulong pin_time;
-  bool *pin_payload;
+  uint16_t     pin_average;
+  ulong        pin_time;
+  bool        *pin_payload;
 
   std::function<void()> buttonDownCallback;
   std::function<void()> buttonPressedCallback;

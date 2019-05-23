@@ -26,9 +26,11 @@ ButtonState Button::update()
   
   update_time = millis();
   
-  pin_average = (pin_average * (PIN_AVERAGE - 1) + (digitalRead(pin) ^ pin_inverted)) / PIN_AVERAGE;
+  // avg      = (             avg * 3             +             0 or 255                    + 2) /  4
+  pin_average = ((pin_average << 2) - pin_average + (digitalRead(pin) ^ pin_inverted) * 255 + 2) >> 2; // for uint16
+  // pin_average = (pin_average * (PIN_AVERAGE - 1) + (digitalRead(pin) ^ pin_inverted)) / PIN_AVERAGE; // for float
 
-  if (pin_average > 0.8 && pin_laststate == RELEASED)
+  if (pin_laststate == RELEASED && pin_average > 223)
   {
     pin_time = millis();
     pin_laststate = DOWN;
@@ -42,21 +44,21 @@ ButtonState Button::update()
     return pin_laststate;
   }
 
-  if (pin_average > 0.8 && pin_laststate == DOWN)
+  if (pin_laststate == DOWN && pin_average > 223)
   {
     pin_laststate = PRESSED;
     buttonPressedCallback();
     return pin_laststate;
   }
 
-  if (pin_average < 0.2 && (pin_laststate == DOWN || pin_laststate == PRESSED))
+  if ((pin_laststate == DOWN || pin_laststate == PRESSED) && pin_average < 32)
   {
     pin_laststate = UP;
     buttonUpCallback(millis() - pin_time);
     return pin_laststate;
   }
 
-  if (pin_average < 0.2 && pin_laststate == UP)
+  if (pin_laststate == UP && pin_average < 32)
   {
     pin_laststate = RELEASED;
     return pin_laststate;
