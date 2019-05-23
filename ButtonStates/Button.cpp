@@ -34,11 +34,11 @@ ButtonState Button::update()
   {
     pin_time = millis();
     pin_laststate = DOWN;
-    buttonDownCallback();
+    buttonDownCallback(this);
     
     if (pin_payload != 0) {
       *pin_payload = !*pin_payload;
-      payloadUpdatedCallback(pin_payload);
+      payloadUpdatedCallback(this, pin_payload);
     }
 
     return pin_laststate;
@@ -47,14 +47,14 @@ ButtonState Button::update()
   if (pin_laststate == DOWN && pin_average > 223)
   {
     pin_laststate = PRESSED;
-    buttonPressedCallback();
+    buttonPressedCallback(this);
     return pin_laststate;
   }
 
   if ((pin_laststate == DOWN || pin_laststate == PRESSED) && pin_average < 32)
   {
     pin_laststate = UP;
-    buttonUpCallback(millis() - pin_time);
+    buttonUpCallback(this, millis() - pin_time);
     return pin_laststate;
   }
 
@@ -82,21 +82,21 @@ void Button::removePayload()
   pin_payload = 0;
 }
 
-void Button::onButtonDown(std::function<void()> onButtonDownCallback) {
+void Button::onButtonDown(std::function<void(Button*)> onButtonDownCallback) {
   buttonDownCallback = onButtonDownCallback;
 }
 
-void Button::onButtonPressed(std::function<void()> onButtonPressedCallback)
+void Button::onButtonPressed(std::function<void(Button*)> onButtonPressedCallback)
 {
   buttonPressedCallback = onButtonPressedCallback;
 }
 
-void Button::onButtonUp(std::function<void(ulong)> onButtonUpCallback)
+void Button::onButtonUp(std::function<void(Button*, ulong)> onButtonUpCallback)
 {
   buttonUpCallback = onButtonUpCallback;
 }
 
-void Button::onPayloadUpdated(std::function<void(bool*)> onPayloadUpdatedCallback)
+void Button::onPayloadUpdated(std::function<void(Button*, bool*)> onPayloadUpdatedCallback)
 {
   payloadUpdatedCallback = onPayloadUpdatedCallback;
 }

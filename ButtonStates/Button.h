@@ -21,10 +21,10 @@ public:
   void setPayload(bool *payload);
   void removePayload();
 
-  void onButtonDown(std::function<void()> onButtonDownCallback);
-  void onButtonPressed(std::function<void()> onButtonPressedCallback);
-  void onButtonUp(std::function<void(ulong)> onButtonUpCallback);
-  void onPayloadUpdated(std::function<void(bool*)> onPayloadUpdatedCallback);
+  void onButtonDown(std::function<void(Button*)> onButtonDownCallback);
+  void onButtonPressed(std::function<void(Button*)> onButtonPressedCallback);
+  void onButtonUp(std::function<void(Button*, ulong)> onButtonUpCallback);
+  void onPayloadUpdated(std::function<void(Button*, bool*)> onPayloadUpdatedCallback);
 
 protected:
   bool running = false;
@@ -37,10 +37,10 @@ protected:
   ulong        pin_time;
   bool        *pin_payload;
 
-  std::function<void()> buttonDownCallback;
-  std::function<void()> buttonPressedCallback;
-  std::function<void(ulong)> buttonUpCallback;
-  std::function<void(bool*)> payloadUpdatedCallback;
+  std::function<void(Button*)> buttonDownCallback;
+  std::function<void(Button*)> buttonPressedCallback;
+  std::function<void(Button*, ulong)> buttonUpCallback;
+  std::function<void(Button*, bool*)> payloadUpdatedCallback;
 };
 
 #endif
