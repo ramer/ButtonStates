@@ -6,9 +6,6 @@
 #include <ESP8266WiFi.h>
 
 #define INTERVAL_UPDATE	              5
-#define INTERVAL_BUTTON_DEBOUNCE	    100
-#define INTERVAL_BUTTON_IDLE	        200
-#define PIN_AVERAGE                   5
 
 enum ButtonState { STOPPED = -1, RELEASED = 0, DOWN = 1, PRESSED = 2, UP = 4 };
 
